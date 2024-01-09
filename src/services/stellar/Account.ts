@@ -15,7 +15,7 @@ class Account {
     return this;
   }
 
-  static async create(): Promise<Account> {
+  static create(): Account {
     const keypair = Keypair.random();
     return new Account(keypair);
   }

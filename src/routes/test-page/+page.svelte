@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { Account } from "../../services/stellar/Account";
-  import { server } from "../../services/stellar/utils";
+  import { Account } from '../../services/stellar/Account';
+  import { server } from '../../services/stellar/utils';
 
   let account: Account | null = null;
-  let balance = "";
+  let balance = '';
   let isLoading = false;
-  let error = "";
+  let error = '';
 
   function handleError(e: Error) {
     error = `${e}`;
   }
 
   async function createAccount() {
-    error = "";
+    error = '';
     isLoading = true;
     try {
       account = await Account.create();
@@ -24,14 +24,9 @@
     isLoading = false;
   }
 
-  async function fundAccount() {
-    error = "";
+  async function fundAccount(account: Account) {
+    error = '';
     isLoading = true;
-
-    if (!account) {
-      error = "Account not created";
-      return;
-    }
 
     try {
       await account.fundWithFriendBot();
@@ -56,21 +51,22 @@
   }
 
   $: if (account) {
-    balance = "Fund account to see the balance";
+    balance = 'Fund account to see the balance';
   }
 </script>
 
 <button on:click={createAccount} disabled={isLoading}>
-  {isLoading ? "Processing..." : "Create Account"}
+  {isLoading ? 'Processing...' : 'Create Account'}
 </button>
 {#if account}
-  <button on:click={fundAccount} disabled={isLoading}>
-    {isLoading ? "Processing..." : "Fund Account"}
+  <button on:click={fundAccount.bind(null, account)} disabled={isLoading}>
+    {isLoading ? 'Processing...' : 'Fund Account'}
   </button>
 {/if}
+
 <section class="log-box">
-  <p>Account: {account ? account.publicKey : "No account"}</p>
-  <p>XLM Balance: {balance ? balance : "No balance"}</p>
+  <p>Account: {account ? account.publicKey : 'No account'}</p>
+  <p>XLM Balance: {balance ? balance : 'No balance'}</p>
   {#if error}
     <p>Error: {error}</p>
   {/if}
